@@ -5,25 +5,31 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using HanumanInstitute.MvvmDialogs;
+using Microsoft.Extensions.Logging;
+
 using SharpLSL;
 
 namespace StreamViewer.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-    public MainWindowViewModel(Settings settings, IDialogService dialogService)
+    public MainWindowViewModel(
+        Settings settings,
+        IDialogService dialogService,
+        ILogger<MainWindowViewModel> logger)
     {
         Settings = settings;
 
         this.dialogService = dialogService;
+        this.logger = logger;
 
-        Waveform = new WaveformControlViewModel();
+        Waveform = Ioc.Default.GetService<WaveformControlViewModel>();
     }
 
     public Settings Settings { get; }
 
     [ObservableProperty]
-    private WaveformControlViewModel waveform;
+    private WaveformControlViewModel? waveform;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(ConnectToStreamCommand))]
@@ -50,11 +56,15 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
+            FailedToCreateStreamInlet(logger, ex);
             return;
         }
 
 
     }
+
+    [LoggerMessage(EventId = 0, Level = LogLevel.Error, Message = "Failed to create StreamInlet!")]
+    public static partial void FailedToCreateStreamInlet(ILogger logger, Exception ex);
 
     private bool CanConnectToStream() => SelectedRegularStream != null;
 
@@ -73,4 +83,13 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     private readonly IDialogService dialogService;
+    private readonly ILogger<MainWindowViewModel> logger;
 }
+
+
+// References:
+// [Please provide an example for CA1848](https://github.com/dotnet/docs/issues/28306)
+// [Compile-time logging source generation](https://learn.microsoft.com/en-us/dotnet/core/extensions/logger-message-generator)
+// [LoggerMessageAttribute extension to support Exception messages](https://github.com/dotnet/runtime/issues/84233)
+// [Microsoft.Extensions.Logging, LoggerMessageAttribute, and Message Templates structure capturing operator](https://stackoverflow.com/questions/71664943/microsoft-extensions-logging-loggermessageattribute-and-message-templates-stru)
+// [Enhance .NET Performance with Structured Logging using LoggerMessageAttribute](https://medium.com/@judevajira/enhance-net-performance-with-structured-logging-using-loggermessageattribute-d48a2a569590)
