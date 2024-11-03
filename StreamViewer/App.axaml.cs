@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.Reflection;
 
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -18,19 +20,21 @@ public partial class App : Application
 {
     public override void Initialize()
     {
-        AvaloniaXamlLoader.Load(this);
-
         ConfigureServices();
 
         var serviceProvider = ConfigureServices();
 
         Ioc.Default.ConfigureServices(serviceProvider);
+
+        AvaloniaXamlLoader.Load(this);
     }
 
     public override void OnFrameworkInitializationCompleted()
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
+            desktop.Exit += OnExit;
+
             // Line below is needed to remove Avalonia data validation.
             // Without this line you will get duplicate validations from both Avalonia and CT
             BindingPlugins.DataValidators.RemoveAt(0);
@@ -43,7 +47,7 @@ public partial class App : Application
         base.OnFrameworkInitializationCompleted();
     }
 
-    private IServiceProvider ConfigureServices()
+    private static IServiceProvider ConfigureServices()
     {
         var services = new ServiceCollection();
 
@@ -57,10 +61,22 @@ public partial class App : Application
                     logger: loggerFactory.CreateLogger<DialogManager>()),
                     viewModelFactory: x => Ioc.Default.GetService(x)));
 
+        var assembly = Assembly.GetEntryAssembly() ?? Assembly.GetCallingAssembly();
+        var baseDirectory = Path.GetDirectoryName(assembly!.Location);
+        var settingsFilePath = Path.Combine(baseDirectory!, "Settings.json");
+
         services.AddTransient<MainWindowViewModel>();
         services.AddTransient<SelectStreamWindowViewModel>();
+        services.AddTransient<SettingsWindowViewModel>();
+        services.AddTransient<AboutWindowViewModel>();
+        services.AddSingleton<Settings>(Settings.Load(settingsFilePath));
 
         return services.BuildServiceProvider();
+    }
+
+    private void OnExit(object? sender, ControlledApplicationLifetimeExitEventArgs e)
+    {
+        Ioc.Default.GetService<Settings>().Store();
     }
 }
 
@@ -70,3 +86,4 @@ public partial class App : Application
 // https://github.com/CommunityToolkit/MVVM-Samples
 // https://github.com/CommunityToolkit/MVVM-Samples/blob/master/samples/MvvmSampleXF/MvvmSampleXF/App.xaml.cs
 // https://github.com/CommunityToolkit/dotnet/blob/main/src/CommunityToolkit.Mvvm/DependencyInjection/Ioc.cs
+// [Call method on application exit in Avalonia](https://stackoverflow.com/questions/75247536/call-method-on-application-exit-in-avalonia)

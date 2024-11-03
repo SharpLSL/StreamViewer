@@ -4,8 +4,5 @@ namespace StreamViewer.Views;
 
 public partial class SelectStreamWindow : Window
 {
-    public SelectStreamWindow()
-    {
-        InitializeComponent();
-    }
+    public SelectStreamWindow() => InitializeComponent();
 }

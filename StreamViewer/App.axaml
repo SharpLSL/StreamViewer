@@ -1,17 +1,33 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="StreamViewer.App"
+             xmlns:converters="using:StreamViewer.Converters"
              xmlns:local="using:StreamViewer"
              xmlns:sty="using:FluentAvalonia.Styling"
              RequestedThemeVariant="Default">
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
     <Application.DataTemplates>
-        <local:ViewLocator/>
+        <local:ViewLocator />
     </Application.DataTemplates>
-  
+
+    <Application.Resources>
+        <converters:EnumDescriptionConverter x:Key="EnumDescriptionConverter" />
+        <FontFamily x:Key="FontAwesomeBrands">avares://StreamViewer.Assets/Fonts/#Font Awesome 6 Brands</FontFamily>
+        <FontFamily x:Key="FontAwesomeSolid">avares://StreamViewer.Assets/Fonts/#Font Awesome 6 Free Solid</FontFamily>
+    </Application.Resources>
+
     <Application.Styles>
         <FluentTheme />
         <sty:FluentAvaloniaTheme />
     </Application.Styles>
+
+    <!--
+    References:
+    https://docs.avaloniaui.net/docs/0.10.x/getting-started/assets
+    https://github.com/AvaloniaUI/Avalonia/discussions/8954
+    https://docs.avaloniaui.net/docs/guides/styles-and-resources/resources
+    https://docs.avaloniaui.net/docs/guides/styles-and-resources/how-to-use-fonts
+    https://docs.avaloniaui.net/docs/guides/graphics-and-animation/how-to-use-icons
+    -->
 </Application>

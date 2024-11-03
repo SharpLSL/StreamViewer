@@ -1,38 +1,116 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:StreamViewer.ViewModels"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:ui="using:FluentAvalonia.UI.Controls"
-        mc:Ignorable="d"
-        d:DesignWidth="800"
-        d:DesignHeight="450"
-        x:Class="StreamViewer.Views.MainWindow"
-        x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="StreamViewer">
+<fa:AppWindow xmlns="https://github.com/avaloniaui"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+              xmlns:common="clr-namespace:StreamViewer.Common"
+              xmlns:controls="clr-namespace:StreamViewer.Controls"
+              xmlns:fa="using:FluentAvalonia.UI.Windowing"
+              xmlns:models="clr-namespace:StreamViewer.Models"
+              xmlns:ui="using:FluentAvalonia.UI.Controls"
+              xmlns:viewmodels="using:StreamViewer.ViewModels"
+              mc:Ignorable="d"
+              d:DesignWidth="800"
+              d:DesignHeight="450"
+              x:Class="StreamViewer.Views.MainWindow"
+              x:DataType="viewmodels:MainWindowViewModel"
+              Icon="//StreamViewer.Assets/Icons/avalonia-logo.ico"
+              Title="Stream Viewer"
+              WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <ui:FontIconSource x:Key="SearchIcon"
+                           FontFamily="{StaticResource FontAwesomeSolid}"
+                           Glyph="&#xf05b;" />
+        <ui:FontIconSource x:Key="ConnectIcon"
+                           FontFamily="{StaticResource FontAwesomeSolid}"
+                           Glyph="&#xf04b;" />
+        <ui:FontIconSource x:Key="GearIcon"
+                           FontFamily="{StaticResource FontAwesomeSolid}"
+                           Glyph="&#xf013;" />
+        <ui:FontIconSource x:Key="InfoIcon"
+                           FontFamily="{StaticResource FontAwesomeSolid}"
+                           Glyph="&#xf05a;" />
+    </Window.Resources>
 
-  <Design.DataContext>
-    <!-- This only sets the DataContext for the previewer in an IDE,
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
          to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-    <vm:MainWindowViewModel/>
-  </Design.DataContext>
+        <!--
+        <vm:MainWindowViewModel/>
+        -->
+    </Design.DataContext>
 
-  <DockPanel>
-    <ui:CommandBar DockPanel.Dock="Top">
-      <ui:CommandBarButton Command="{Binding ConnectCommand}">
-        <ui:SymbolIcon Symbol="Find"
-                       Foreground="SkyBlue"/>
-      </ui:CommandBarButton>
-    </ui:CommandBar>
+    <DockPanel>
+        <ui:CommandBar DockPanel.Dock="Top"
+                       DefaultLabelPosition="Right">
+            <ui:CommandBar.PrimaryCommands>
+                <ui:CommandBarButton IconSource="{StaticResource SearchIcon}"
+                                     Label="Select LSL stream..."
+                                     Command="{Binding SelectStreamCommand}" />
+                <ui:CommandBarButton IconSource="{StaticResource ConnectIcon}"
+                                     Label="Connect"
+                                     Command="{Binding ConnectToStreamCommand}"
+                                     VerticalContentAlignment="Center" />
 
-    <Grid>
+                <ui:CommandBarSeparator />
 
-    </Grid>
-  </DockPanel>
+                <ui:CommandBarElementContainer>
+                    <StackPanel Orientation="Horizontal"
+                                VerticalAlignment="Center">
+                        <Label Content="Speed"
+                               VerticalAlignment="Center"
+                               VerticalContentAlignment="Center" />
+                        <ComboBox ItemsSource="{Binding Source={common:EnumBindingSource {x:Type models:Speed}}}"
+                                  SelectedItem="{Binding Settings.Speed}"
+                                  VerticalContentAlignment="Center">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+                </ui:CommandBarElementContainer>
 
-  <!--
-  References:
-  [Does AvaloniaUI have an icon based toolbar component?](https://github.com/AvaloniaUI/Avalonia/discussions/10939)
-  -->
-</Window>
+                <ui:CommandBarElementContainer>
+                    <StackPanel Orientation="Horizontal"
+                                VerticalAlignment="Center">
+                        <Label Content="Sensitivity"
+                               VerticalAlignment="Center"
+                               VerticalContentAlignment="Center" />
+                        <ComboBox ItemsSource="{Binding Source={common:EnumBindingSource {x:Type models:Sensitivity}}}"
+                                  SelectedItem="{Binding Settings.Sensitivity}"
+                                  VerticalContentAlignment="Center">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+                </ui:CommandBarElementContainer>
+
+                <ui:CommandBarSeparator />
+
+                <ui:CommandBarButton IconSource="{StaticResource GearIcon}"
+                                     Label="Settings..."
+                                     Command="{Binding ShowSettingsWindowCommand}" />
+                <ui:CommandBarButton IconSource="{StaticResource InfoIcon}"
+                                     Label="About..."
+                                     Command="{Binding ShowAboutWindowCommand}"
+                                     HorizontalContentAlignment="Center" />
+            </ui:CommandBar.PrimaryCommands>
+
+            <ui:CommandBar.SecondaryCommands>
+            </ui:CommandBar.SecondaryCommands>
+        </ui:CommandBar>
+
+        <Grid DataContext="{Binding Waveform}">
+            <controls:WaveformControl />
+        </Grid>
+    </DockPanel>
+
+    <!--
+    References:
+    [Does AvaloniaUI have an icon based toolbar component?](https://github.com/AvaloniaUI/Avalonia/discussions/10939)
+    -->
+</fa:AppWindow>

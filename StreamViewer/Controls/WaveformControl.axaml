@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+             xmlns:vm="using:StreamViewer.ViewModels"
+             mc:Ignorable="d"
+             d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="StreamViewer.Controls.WaveformControl"
+             x:DataType="vm:WaveformControlViewModel">
+    <Grid>
+        <i:Interaction.Behaviors>
+            <ia:EventTriggerBehavior EventName="SizeChanged">
+                <ia:InvokeCommandAction Command="{Binding SizeChangedCommand}"
+                                        PassEventArgsToCommand="True" />
+            </ia:EventTriggerBehavior>
+        </i:Interaction.Behaviors>
+        <Image Source="{Binding Bitmap}" />
+    </Grid>
+
+    <!--
+    References:
+    https://github.com/AvaloniaUI/Avalonia.Xaml.Behaviors/blob/master/samples/BehaviorsTestApplication/Views/Pages/InvokeCommandActionView.axaml
+    -->
+</UserControl>

@@ -1,17 +1,14 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework Condition="$([MSBuild]::IsOsPlatform('Windows'))">net6.0-windows</TargetFramework>
+    <TargetFramework Condition="!$([MSBuild]::IsOsPlatform('Windows'))">net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Folder Include="Models\" />
-    <AvaloniaResource Include="Assets\**" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.1.0" />
@@ -20,18 +17,54 @@
     <PackageReference Include="Avalonia.Fonts.Inter" Version="11.1.0" />
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.1.0" />
+    <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.1.0.2" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+    <PackageReference Include="DisposableObject" Version="1.0.0" />
     <PackageReference Include="FluentAvaloniaUI" Version="2.1.0" />
+    <!--
+    References:
+    GitVersion.MsBuild 6.0.3 doesn't work as expected.
+    [GitVersion MSBuild v.6.0.2 does not generate AssemblyInfo.g.cs needed to override AssemblyVersion](https://github.com/GitTools/GitVersion/issues/4190)
+    [NET 8.0 - MSB4062 The "WriteVersionInfoToBuildLog" task could not be loaded - reloaded](https://github.com/GitTools/GitVersion/issues/4116)
+    -->
+    <PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="HanumanInstitute.MvvmDialogs.Avalonia" Version="2.1.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
-    <PackageReference Include="SharpLSL" Version="0.0.7" />
-    <PackageReference Include="SharpLSL.Native.linux-arm64" Version="1.16.2.1" />
-    <PackageReference Include="SharpLSL.Native.linux-x64" Version="1.16.2.1" />
-    <PackageReference Include="SharpLSL.Native.osx-arm64" Version="1.16.2.1" />
-    <PackageReference Include="SharpLSL.Native.osx-x64" Version="1.16.2.1" />
-    <PackageReference Include="SharpLSL.Native.win-arm64" Version="1.16.2.1" />
-    <PackageReference Include="SharpLSL.Native.win-x64" Version="1.16.2.1" />
-    <PackageReference Include="SharpLSL.Native.win-x86" Version="1.16.2.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="SharpCommon" Version="0.2.0" />
+    <PackageReference Include="SharpGraphics" Version="0.0.4" />
+    <PackageReference Include="SharpGraphics.Common.Avalonia" Version="0.0.4" />
+    <PackageReference Include="SharpGraphics.GdiPlus" Version="0.0.4" Condition="$([MSBuild]::IsOsPlatform('Windows'))" />
+    <PackageReference Include="SharpGraphics.GdiPlus.Avalonia" Version="0.0.4" Condition="$([MSBuild]::IsOsPlatform('Windows'))" />
+    <PackageReference Include="SharpGraphics.SkiaSharp" Version="0.0.4" />
+    <PackageReference Include="SharpGraphics.SkiaSharp.Avalonia" Version="0.0.4" />
+    <PackageReference Include="SharpLSL" Version="0.0.9" />
+    <PackageReference Include="SharpLSL.Native.linux-arm64" Version="1.16.2.3" Condition="$([MSBuild]::IsOsPlatform('Linux'))" />
+    <PackageReference Include="SharpLSL.Native.linux-x64" Version="1.16.2.3" Condition="$([MSBuild]::IsOsPlatform('Linux'))" />
+    <PackageReference Include="SharpLSL.Native.osx" Version="1.16.2.3" Condition="$([MSBuild]::IsOsPlatform('OSX'))" />
+    <PackageReference Include="SharpLSL.Native.win-arm64" Version="1.16.2.3" Condition="$([MSBuild]::IsOsPlatform('Windows'))" />
+    <PackageReference Include="SharpLSL.Native.win-x64" Version="1.16.2.3" Condition="$([MSBuild]::IsOsPlatform('Windows'))" />
+    <PackageReference Include="SharpLSL.Native.win-x86" Version="1.16.2.3" Condition="$([MSBuild]::IsOsPlatform('Windows'))" />
+    <PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\StreamViewer.Assets\StreamViewer.Assets.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Controls\WaveformControl.axaml.cs">
+      <DependentUpon>WaveformControl.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <!--
+  References:
+  [MSBuild WriteCodeFragment Task](https://stackoverflow.com/questions/37191375/msbuild-writecodefragment-task)
+  [Different NuGet package based on operating system](https://stackoverflow.com/questions/52612790/different-nuget-package-based-on-operating-system)
+  -->
 </Project>
