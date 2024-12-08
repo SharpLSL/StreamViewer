@@ -1,5 +1,6 @@
 using System.IO;
 
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Newtonsoft.Json;
 
@@ -21,11 +22,31 @@ public partial class Settings : ObservableObject
 
     [ObservableProperty]
     [property: JsonProperty]
+    private bool isAntialias;
+
+    [ObservableProperty]
+    [property: JsonProperty]
     private Speed speed = Speed.ThreeCmPerSecond;
 
     [ObservableProperty]
     [property: JsonProperty]
     private Sensitivity sensitivity = Sensitivity.TwentyMicrovoltPerMm;
+
+    [ObservableProperty]
+    [property: JsonProperty]
+    private Color backColor = Colors.WhiteSmoke;
+
+    [ObservableProperty]
+    [property: JsonProperty]
+    private Color oneSecondGridColor = Colors.Gray;
+
+    [ObservableProperty]
+    [property: JsonProperty]
+    private Color twoHundredMillisecondGridColor = Colors.LightGray;
+
+    [ObservableProperty]
+    [property: JsonProperty]
+    private Color waveColor = Colors.Black;
 
     public static Settings Load(string filePath)
     {

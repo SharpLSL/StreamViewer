@@ -2,14 +2,76 @@
               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
               xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+              xmlns:common="using:StreamViewer.Common"
               xmlns:fa="using:FluentAvalonia.UI.Windowing"
+              xmlns:models="using:StreamViewer.Models"
+              xmlns:ui="using:FluentAvalonia.UI.Controls"
               xmlns:vm="using:StreamViewer.ViewModels"
-              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+              mc:Ignorable="d"
+              d:DesignWidth="800" d:DesignHeight="450"
+              Height="450"
               x:Class="StreamViewer.Views.SettingsWindow"
               x:DataType="vm:SettingsWindowViewModel"
+              SizeToContent="Width"
               Title="Settings"
               WindowStartupLocation="CenterOwner">
-    <Grid Margin="20">
-        
-    </Grid>
+    <ScrollViewer>
+        <StackPanel Margin="20,10,20,20"
+                    Spacing="10">
+            <ui:SettingsExpander Header="Graphics engine"
+                                 Description="Graphics backend for waveform display">
+                <ui:SettingsExpander.Footer>
+                    <ComboBox ItemsSource="{Binding Source={common:EnumBindingSource {x:Type models:GraphicsEngine}}}"
+                              SelectedItem="{Binding Settings.GraphicsEngine}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </ui:SettingsExpander.Footer>
+            </ui:SettingsExpander>
+
+            <ui:SettingsExpander Header="Anti-aliasing"
+                                 Description="Whether anti-aliasing is enabled">
+                <ui:SettingsExpander.Footer>
+                    <ToggleSwitch IsChecked="{Binding Settings.IsAntialias}" />
+                </ui:SettingsExpander.Footer>
+            </ui:SettingsExpander>
+
+            <ui:SettingsExpander Header="Background color"
+                     Description="Color of background">
+                <ui:SettingsExpander.Footer>
+                    <ColorPicker Color="{Binding Settings.BackColor}" />
+                </ui:SettingsExpander.Footer>
+            </ui:SettingsExpander>
+
+            <ui:SettingsExpander Header="Grid color (1 second)"
+                     Description="Color of 1 second grid">
+                <ui:SettingsExpander.Footer>
+                    <ColorPicker Color="{Binding Settings.OneSecondGridColor}" />
+                </ui:SettingsExpander.Footer>
+            </ui:SettingsExpander>
+
+            <ui:SettingsExpander Header="Grid color (200 millisecond)"
+                     Description="Color of 200 millisecond grid">
+                <ui:SettingsExpander.Footer>
+                    <ColorPicker Color="{Binding Settings.TwoHundredMillisecondGridColor}" />
+                </ui:SettingsExpander.Footer>
+            </ui:SettingsExpander>
+
+            <ui:SettingsExpander Header="Waveform color"
+                     Description="Color of waveform">
+                <ui:SettingsExpander.Footer>
+                    <ColorPicker Color="{Binding Settings.WaveColor}" />
+                </ui:SettingsExpander.Footer>
+            </ui:SettingsExpander>
+        </StackPanel>
+    </ScrollViewer>
+
+    <!--
+    References:
+    https://github.com/amwx/FluentAvalonia/blob/master/samples/FAControlsGallery/Pages/SettingsPage.axaml
+    https://github.com/amwx/FluentAvalonia/blob/master/samples/FAControlsGallery/Pages/FAControlsPages/SettingsExpanderPage.axaml
+    -->
 </fa:AppWindow>
