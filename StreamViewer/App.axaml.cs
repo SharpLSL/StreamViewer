@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Nito.AsyncEx.Synchronous;
 using Serilog;
 
 using StreamViewer.ViewModels;
@@ -31,25 +32,22 @@ public partial class App : Application
             .AddJsonFile("appsettings.json", optional: false, isDevelopment)
             .AddJsonFile($"appsettings.{environmentName}.json", true, isDevelopment);
 
-        var logDirectory = Path.Combine(AppContext.BaseDirectory, "Logs");
-
-#pragma warning disable CA1305
         Log.Logger = new LoggerConfiguration()
             .ReadFrom.Configuration(builder.Build())
-            //.MinimumLevel.Debug()
-            //.WriteTo.File(Path.Combine(logDirectory, $"StreamViewer-{DateTime.Today:yyyy-MM-dd}.log"), rollingInterval: RollingInterval.Day)
-            .WriteTo.File(Path.Combine(logDirectory, $"StreamViewer.log"), rollingInterval: RollingInterval.Day)
             .CreateLogger();
-#pragma warning restore CA1305
 
-        Log.Information("=================================== Startup ====================================");
-
-        var host = Host.CreateDefaultBuilder()
+        host = Host.CreateDefaultBuilder()
             .UseSerilog()
             .ConfigureServices(ConfigureServices)
             .Build();
 
         Ioc.Default.ConfigureServices(host.Services);
+
+        host.Start();
+
+        logger = host.Services.GetRequiredService<ILogger<App>>();
+
+        logger.LogStartup();
 
         AvaloniaXamlLoader.Load(this);
     }
@@ -82,7 +80,7 @@ public partial class App : Application
                 new DialogManager(
                     viewLocator: new ViewLocator(),
                     logger: loggerFactory.CreateLogger<DialogManager>()),
-                    viewModelFactory: x => Ioc.Default.GetService(x)));
+                    viewModelFactory: x => Ioc.Default.GetRequiredService(x)));
 
         var assembly = Assembly.GetEntryAssembly() ?? Assembly.GetCallingAssembly();
         var baseDirectory = Path.GetDirectoryName(assembly!.Location);
@@ -98,11 +96,17 @@ public partial class App : Application
 
     private void OnExit(object? sender, ControlledApplicationLifetimeExitEventArgs e)
     {
-        Ioc.Default.GetService<Settings>()!.Store();
+        Ioc.Default.GetRequiredService<Settings>()!.Store();
 
-        Log.Information("=================================== Shutdown ===================================");
+        logger.LogShutdown();
+
+        host.StopAsync().WaitAndUnwrapException();
     }
+
+    private IHost host = null!;
+    private ILogger<App> logger = null!;
 }
+
 
 // References:
 // https://github.com/mysteryx93/HanumanInstitute.MvvmDialogs/tree/master/samples/Avalonia/Demo.ModalDialog
@@ -122,3 +126,4 @@ public partial class App : Application
 // [Serilog using appsettings.json instead of appsettings.Development.json](https://stackoverflow.com/questions/68672903/serilog-using-appsettings-json-instead-of-appsettings-development-json)
 // [How to dependency inject Serilog into the rest of my classes in .NET Console App](https://stackoverflow.com/questions/66304596/how-to-dependency-inject-serilog-into-the-rest-of-my-classes-in-net-console-app)
 // [Serilog dependency injection](https://stackoverflow.com/questions/64280467/serilog-dependency-injection)
+// [How to call asynchronous method from synchronous method in C#?](https://stackoverflow.com/questions/9343594/how-to-call-asynchronous-method-from-synchronous-method-in-c)
