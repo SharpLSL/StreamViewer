@@ -1,0 +1,48 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageVersion Include="Avalonia" Version="11.1.0" />
+    <PackageVersion Include="Avalonia.Desktop" Version="11.1.0" />
+    <PackageVersion Include="Avalonia.Diagnostics" Version="11.1.0" />
+    <PackageVersion Include="Avalonia.Fonts.Inter" Version="11.1.0" />
+    <PackageVersion Include="Avalonia.Themes.Fluent" Version="11.1.0" />
+    <PackageVersion Include="Avalonia.Xaml.Behaviors" Version="11.1.0.2" />
+    <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+    <PackageVersion Include="FluentAvaloniaUI" Version="2.1.0" />
+    <PackageVersion Include="GitVersion.MsBuild" Version="5.12.0" />
+    <PackageVersion Include="HanumanInstitute.MvvmDialogs.Avalonia" Version="2.1.0" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageVersion Include="Nito.AsyncEx.Tasks" Version="5.1.2" />
+    <PackageVersion Include="Serilog" Version="4.1.0" />
+    <PackageVersion Include="Serilog.Extensions.Hosting" Version="8.0.0" />
+    <PackageVersion Include="Serilog.Extensions.Logging" Version="8.0.0" />
+    <PackageVersion Include="Serilog.Settings.Configuration" Version="8.0.0" />
+    <PackageVersion Include="Serilog.Sinks.File" Version="6.0.0" />
+    <PackageVersion Include="SharpCommon" Version="0.2.1" />
+    <PackageVersion Include="SharpGraphics" Version="0.0.4" />
+    <PackageVersion Include="SharpGraphics.Common.Avalonia" Version="0.0.4" />
+    <PackageVersion Include="SharpGraphics.GdiPlus" Version="0.0.4" />
+    <PackageVersion Include="SharpGraphics.GdiPlus.Avalonia" Version="0.0.4" />
+    <PackageVersion Include="SharpGraphics.SkiaSharp" Version="0.0.4" />
+    <PackageVersion Include="SharpGraphics.SkiaSharp.Avalonia" Version="0.0.4" />
+    <PackageVersion Include="SharpLSL" Version="0.0.9" />
+    <PackageVersion Include="SharpLSL.Native.linux-arm64" Version="1.16.2.3" />
+    <PackageVersion Include="SharpLSL.Native.linux-x64" Version="1.16.2.3" />
+    <PackageVersion Include="SharpLSL.Native.osx" Version="1.16.2.3" />
+    <PackageVersion Include="SharpLSL.Native.win-arm64" Version="1.16.2.3" />
+    <PackageVersion Include="SharpLSL.Native.win-x64" Version="1.16.2.3" />
+    <PackageVersion Include="SharpLSL.Native.win-x86" Version="1.16.2.3" />
+    <PackageVersion Include="System.Drawing.Primitives" Version="4.3.0" />
+  </ItemGroup>
+
+  <!--
+  [Central Package Management (CPM)](https://learn.microsoft.com/en-us/nuget/consume-packages/central-package-management)
+  -->
+</Project>
