@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.Drawing;
 
 using Avalonia;
@@ -26,7 +25,7 @@ public partial class WaveformControlViewModel : ViewModelBase
     [RelayCommand]
     private void SizeChanged(SizeChangedEventArgs e)
     {
-        SizeChanged(logger, e.NewSize.Width, e.NewSize.Height);
+        logger.SizeChanged(e.NewSize.Width, e.NewSize.Height);
 
         if (e.NewSize.Width > 0 && e.NewSize.Height > 0)
         {
@@ -46,10 +45,6 @@ public partial class WaveformControlViewModel : ViewModelBase
             gfx.DrawLine(0, 0, 100, 100, Color.Black);
         }
     }
-
-    [LoggerMessage(EventId = 0, Level = LogLevel.Information, Message = "Waveform control size changed: {width}x{height}.")]
-    public static partial void SizeChanged(ILogger logger, double width, double height);
-
 
     private readonly ILogger<WaveformControlViewModel> logger;
 }

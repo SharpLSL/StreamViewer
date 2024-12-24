@@ -2,11 +2,10 @@ using System;
 using System.Threading.Tasks;
 
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using HanumanInstitute.MvvmDialogs;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-
 using SharpLSL;
 
 namespace StreamViewer.ViewModels;
@@ -16,14 +15,15 @@ public partial class MainWindowViewModel : ViewModelBase
     public MainWindowViewModel(
         Settings settings,
         IDialogService dialogService,
-        ILogger<MainWindowViewModel> logger)
+        ILogger<MainWindowViewModel> logger,
+        IServiceProvider serviceProvider)
     {
         Settings = settings;
 
         this.dialogService = dialogService;
         this.logger = logger;
 
-        Waveform = Ioc.Default.GetService<WaveformControlViewModel>();
+        Waveform = serviceProvider.GetRequiredService<WaveformControlViewModel>();
     }
 
     public Settings Settings { get; }
@@ -38,7 +38,7 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private async Task SelectStream()
     {
-        using var selectStreamWindow = Ioc.Default.GetService<SelectStreamWindowViewModel>();
+        using var selectStreamWindow = dialogService.CreateViewModel<SelectStreamWindowViewModel>();
         var result = await dialogService.ShowDialogAsync(this, selectStreamWindow!);
         if (result == true)
         {
@@ -56,29 +56,24 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            FailedToCreateStreamInlet(logger, ex);
+            logger.FailedToCreateStreamInlet(ex);
             return;
         }
-
-
     }
-
-    [LoggerMessage(EventId = 0, Level = LogLevel.Error, Message = "Failed to create StreamInlet!")]
-    public static partial void FailedToCreateStreamInlet(ILogger logger, Exception ex);
 
     private bool CanConnectToStream() => SelectedRegularStream != null;
 
     [RelayCommand]
     private async Task ShowSettingsWindow()
     {
-        var settingsWindow = Ioc.Default.GetService<SettingsWindowViewModel>();
+        var settingsWindow = dialogService.CreateViewModel<SettingsWindowViewModel>();
         await dialogService.ShowDialogAsync(this, settingsWindow!);
     }
 
     [RelayCommand]
     private async Task ShowAboutWindow()
     {
-        var aboutWindow = Ioc.Default.GetService<AboutWindowViewModel>();
+        var aboutWindow = dialogService.CreateViewModel<AboutWindowViewModel>();
         await dialogService.ShowDialogAsync(this, aboutWindow!);
     }
 

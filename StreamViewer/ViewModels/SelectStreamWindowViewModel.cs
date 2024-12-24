@@ -64,9 +64,7 @@ public partial class SelectStreamWindowViewModel
     private IList<StreamInfo> irregularStreams = Array.Empty<StreamInfo>();
 
     [ObservableProperty]
-#pragma warning disable IDE0044 // Add readonly modifier
     private bool? dialogResult;
-#pragma warning restore IDE0044 // Add readonly modifier
 
     private void TimerCallback(object? sender, EventArgs e)
     {
@@ -81,10 +79,11 @@ public partial class SelectStreamWindowViewModel
         if (selectedStream != null)
         {
             var matchedStream = RegularStreams
-                .Where(stream => stream.Uid == selectedStream.Uid)
-                .FirstOrDefault();
+                .FirstOrDefault(stream => stream.Uid == selectedStream.Uid);
             if (matchedStream != null)
+            {
                 SelectedRegularStream = matchedStream;
+            }
         }
 
         IrregularStreams = streams

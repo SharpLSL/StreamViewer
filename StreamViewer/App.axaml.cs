@@ -6,7 +6,6 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
-using CommunityToolkit.Mvvm.DependencyInjection;
 using HanumanInstitute.MvvmDialogs;
 using HanumanInstitute.MvvmDialogs.Avalonia;
 using Microsoft.Extensions.Configuration;
@@ -41,8 +40,6 @@ public partial class App : Application
             .ConfigureServices(ConfigureServices)
             .Build();
 
-        Ioc.Default.ConfigureServices(host.Services);
-
         host.Start();
 
         logger = host.Services.GetRequiredService<ILogger<App>>();
@@ -62,15 +59,15 @@ public partial class App : Application
             // Without this line you will get duplicate validations from both Avalonia and CT
             BindingPlugins.DataValidators.RemoveAt(0);
 
-            var dialogService = Ioc.Default.GetService<IDialogService>();
-            var mainWindow = Ioc.Default.GetService<MainWindowViewModel>();
+            var dialogService = host.Services.GetRequiredService<IDialogService>();
+            var mainWindow = host.Services.GetRequiredService<MainWindowViewModel>();
             dialogService!.Show(null, mainWindow!);
         }
 
         base.OnFrameworkInitializationCompleted();
     }
 
-    private static void ConfigureServices(HostBuilderContext _, IServiceCollection services)
+    private void ConfigureServices(HostBuilderContext _, IServiceCollection services)
     {
         var loggerFactory = LoggerFactory.Create(
             builder => builder.AddFilter(logLevel => true));
@@ -80,7 +77,7 @@ public partial class App : Application
                 new DialogManager(
                     viewLocator: new ViewLocator(),
                     logger: loggerFactory.CreateLogger<DialogManager>()),
-                    viewModelFactory: x => Ioc.Default.GetRequiredService(x)));
+                    viewModelFactory: x => host.Services.GetRequiredService(x)));
 
         var assembly = Assembly.GetEntryAssembly() ?? Assembly.GetCallingAssembly();
         var baseDirectory = Path.GetDirectoryName(assembly!.Location);
@@ -96,7 +93,7 @@ public partial class App : Application
 
     private void OnExit(object? sender, ControlledApplicationLifetimeExitEventArgs e)
     {
-        Ioc.Default.GetRequiredService<Settings>()!.Store();
+        host.Services.GetRequiredService<Settings>()!.Store();
 
         logger.LogShutdown();
 

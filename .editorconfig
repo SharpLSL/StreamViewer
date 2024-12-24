@@ -43,6 +43,10 @@ indent_size = 2
 [*.{yml,yaml}]
 indent_size = 2
 
+# Manifest file
+[app.manifest]
+indent_size = 2
+
 # Markdown Files
 [*.md]
 trim_trailing_whitespace = false
