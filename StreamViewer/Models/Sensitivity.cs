@@ -123,5 +123,11 @@ public enum Sensitivity
     FiveHundredMillivoltPerMm = 500000,
 
     [Description("1 V/mm")]
-    OneThousandMillivoltPerMm = 1000000
+    OneThousandMillivoltPerMm = 1000000,
+
+    [Description("2 V/mm")]
+    TwoThousandMillivoltPerMm = 2000000,
+
+    [Description("5 V/mm")]
+    FiveThousandMillivoltPerMm = 5000000
 }

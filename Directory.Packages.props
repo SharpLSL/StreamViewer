@@ -27,13 +27,13 @@
     <PackageVersion Include="Serilog.Sinks.Debug" Version="3.0.0" />
     <PackageVersion Include="Serilog.Sinks.File" Version="6.0.0" />
     <PackageVersion Include="Serilog.Sinks.Udp" Version="8.0.0" />
-    <PackageVersion Include="SharpCommon" Version="0.2.1" />
-    <PackageVersion Include="SharpGraphics" Version="0.0.4" />
-    <PackageVersion Include="SharpGraphics.Common.Avalonia" Version="0.0.4" />
-    <PackageVersion Include="SharpGraphics.GdiPlus" Version="0.0.4" />
-    <PackageVersion Include="SharpGraphics.GdiPlus.Avalonia" Version="0.0.4" />
-    <PackageVersion Include="SharpGraphics.SkiaSharp" Version="0.0.4" />
-    <PackageVersion Include="SharpGraphics.SkiaSharp.Avalonia" Version="0.0.4" />
+    <PackageVersion Include="SharpCommon" Version="0.2.2" />
+    <PackageVersion Include="SharpGraphics" Version="0.0.5" />
+    <PackageVersion Include="SharpGraphics.Common.Avalonia" Version="0.0.5" />
+    <PackageVersion Include="SharpGraphics.GdiPlus" Version="0.0.5" />
+    <PackageVersion Include="SharpGraphics.GdiPlus.Avalonia" Version="0.0.5" />
+    <PackageVersion Include="SharpGraphics.SkiaSharp" Version="0.0.5" />
+    <PackageVersion Include="SharpGraphics.SkiaSharp.Avalonia" Version="0.0.5" />
     <PackageVersion Include="SharpLSL" Version="0.0.9" />
     <PackageVersion Include="SharpLSL.Native.linux-arm64" Version="1.16.2.3" />
     <PackageVersion Include="SharpLSL.Native.linux-x64" Version="1.16.2.3" />

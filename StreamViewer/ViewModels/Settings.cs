@@ -26,6 +26,10 @@ public partial class Settings : ObservableObject
 
     [ObservableProperty]
     [property: JsonProperty]
+    private double dotsPerMm;
+
+    [ObservableProperty]
+    [property: JsonProperty]
     private Speed speed = Speed.ThreeCmPerSecond;
 
     [ObservableProperty]
@@ -38,7 +42,11 @@ public partial class Settings : ObservableObject
 
     [ObservableProperty]
     [property: JsonProperty]
-    private Color oneSecondGridColor = Colors.Gray;
+    private Color tickColor = Colors.Black;
+
+    [ObservableProperty]
+    [property: JsonProperty]
+    private Color oneSecondGridColor = Colors.LightGray;
 
     [ObservableProperty]
     [property: JsonProperty]
@@ -47,6 +55,18 @@ public partial class Settings : ObservableObject
     [ObservableProperty]
     [property: JsonProperty]
     private Color waveColor = Colors.Black;
+
+    [ObservableProperty]
+    [property: JsonProperty]
+    private double longTickLength = 8;
+
+    [ObservableProperty]
+    [property: JsonProperty]
+    private double tickLength = 5;
+
+    [ObservableProperty]
+    [property: JsonProperty]
+    private double shortTickLength = 3;
 
     public static Settings Load(string filePath)
     {
