@@ -97,6 +97,8 @@ public partial class App : Application
 
         logger.LogShutdown();
 
+        Log.CloseAndFlush();
+
         host.StopAsync().WaitAndUnwrapException();
     }
 
