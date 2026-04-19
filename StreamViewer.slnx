@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="StreamViewer.Assets/StreamViewer.Assets.csproj" />
+  <Project Path="StreamViewer/StreamViewer.csproj" />
+</Solution>
